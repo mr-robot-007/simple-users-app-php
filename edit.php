@@ -6,7 +6,6 @@ include 'constants.php';
 include 'header.php';
 
 
-const conn = new mysqli(SERVER_NAME, USERNAME, PASSWORD, DB);
 
 
 function test_input($input, $id)
@@ -50,7 +49,8 @@ if (isset($_POST["edituser"])) {
         $target_file = $target_dir . basename($_FILES["image"]["name"]);
         $imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
         move_uploaded_file($_FILES["image"]["tmp_name"], $target_file);
-        if($target_file === $target_dir) $target_file="Not available";
+        if ($target_file === $target_dir)
+            $target_file = "Not available";
 
         $sql_query = "UPDATE demo_table SET username = '$username' , password = '$password',profile_pic= '$target_file' WHERE email='$email'";
         conn->query($sql_query);
@@ -65,7 +65,7 @@ if (isset($_POST["edituser"])) {
 $_id = $_GET['id'];
 $sql_query = "SELECT * from demo_table WHERE id='$_id' ";
 $result = conn->query($sql_query)->fetch_assoc();
-echo '
+?>
 <div>
     <a href="dashboard.php">
 
@@ -78,23 +78,23 @@ echo '
     <div class="flex gap-2 w-[60%] justify-between">
         <label for="email">Email : </label>
         <div>
-        <input type = "email" name="email" disabled  class="px-1 rounded-md outline outline-2"value = "' . $result["email"] . '" />
+        <input type = "email" name="email" disabled  class="px-1 rounded-md outline outline-2"value = "<?php echo $result["email"]; ?>" />
         </div>
-        <input type = "hidden" name="email"   class=" rounded-md outline outline-2"value = "' . $result["email"] . '" />
-        <input type = "hidden" name="id"   class=" rounded-md outline outline-2"value = "' . $result["id"] . '" />
+        <input type = "hidden" name="email"   class=" rounded-md outline outline-2"value = "<?php echo $result["email"]; ?>" />
+        <input type = "hidden" name="id"   class=" rounded-md outline outline-2"value = "<?php echo $result["id"]; ?>" />
     </div>
     <div  class="flex gap-2 w-[60%] justify-between">
         <label for="username">Username : </label>
         <div class="flex flex-col">
-        <input type = "username" name="username"  class="px-1 rounded-md outline outline-2"value = "' . $result["username"] . '" />
-        <span class="error text-red-800 text-xs">' . $usernameErr . '</span>
+        <input type = "username" name="username"  class="px-1 rounded-md outline outline-2"value = "<?php echo $result["username"]; ?>" />
+        <span class="error text-red-800 text-xs"><?php echo $usernameErr; ?></span>
         </div>
     </div>
     <div  class="flex gap-2 w-[60%] justify-between">
         <label for="password">Password : </label>
         <div class="flex flex-col">
-        <input type = "text" name="password"  class="px-1 rounded-md outline outline-2" value ="' . $result["password"] . '"/>
-        <span class="error text-red-800 text-xs">' . $passwordErr . '</span>
+        <input type = "text" name="password"  class="px-1 rounded-md outline outline-2" value ="<?php echo $result["password"]; ?>" />
+        <span class="error text-red-800 text-xs"><?php echo $passwordErr; ?></span>
         </div>
     </div>
     <div  class="flex gap-2 w-[60%] justify-between">
@@ -105,4 +105,3 @@ echo '
 </form>
 </div>
 
-';

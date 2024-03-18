@@ -1,19 +1,12 @@
+ <?php
+ // echo phpinfo();
+// die();
+ ?> 
 <script src="https://cdn.tailwindcss.com"></script>
-<!-- <script>
-    document.getElementById("delete_button").addEventListener("click", function(event){
-    event.preventDefault();
-    if(confirm("Are you sure you want to delete this item?")){
-        // Run the delete routine
-        console.log(event);
-    }
-});
-</script> -->
 
 <?php
 
 include 'constants.php';
-const conn = new mysqli(SERVER_NAME, USERNAME, PASSWORD, DB);
-
 
 $usernameErr = $passwordErr = "";
 if (isset($_POST["logout"])) {
@@ -29,16 +22,21 @@ if (isset($_POST["logout"])) {
     $result = conn->query($sql_query)->fetch_assoc();
     // print_r($result);
     if ($result) {
-        $_SESSION["profile_pic"] = $result["profile_pic"];
-        $_SESSION["username"] = $result['username'];
+        // $_SESSION["user"] = $result["profile_pic"];
+        $_SESSION["user"] = array(
+            "username" => $result["username"],
+            "uid" => $result["id"],
+            "profile_pic" => $result["profile_pic"],
+            "type" => $result["type"],
+        );
+        // $_SESSION["username"] = $result['username'];
     } else {
         header('Location:index.php');
     }
 }
-// echo "<br>";
 
 
-if (isset($_SESSION['username'])) {
+if (isset($_SESSION['user']['username'])) {
     include 'header.php';
     $sql_query = "SELECT * from demo_table";
     $result = conn->query($sql_query);
@@ -52,44 +50,6 @@ if (isset($_SESSION['username'])) {
 } else {
     header("Location: index.php");
 }
+include 'listing.php';
 
 ?>
-
-<div class="container mx-auto px-4">
-        <table class="table-auto w-full mt-10">
-            <thead>
-                <tr>
-                    <th class="px-4 py-2 text-left">ID</th>
-                    <th class="px-4 py-2 text-left">Email</th>
-                    <th class="px-4 py-2 text-left">Username</th>
-                    <th class="px-4 py-2 text-left">Profile_Pic</th>
-                    <th class="px-4 py-2 text-left">Actions</th>
-                    <th class="px-4 py-2 text-left">Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php
-                $rows = $_SESSION['result'];
-
-                foreach ($rows as $row) {
-                    echo "<tr>";
-                    echo "<td class='border px-4 py-2'>" . $row["id"] . "</td>";
-                    echo "<td class='border px-4 py-2'>" . $row["email"] . "</td>";
-                    echo "<td class='border px-4 py-2'>" . $row["username"] . "</td>";
-                    echo "<td class='border px-4 py-2'>" . $row["profile_pic"] . "</td>";
-                    echo "<td class='border px-4 py-2'>" . "<a href ='edit.php?id={$row["id"]}'><button class='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded'>Edit</button></a>" . "</td>";
-                    // echo "<td class='border px-4 py-2'>" . "<a id='delete_button' '><button id = 'delete_button' class='bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded'>Delete</button></a>" . "</td>";
-                    echo "<td class='border px-4 py-2'>" . "<a href ='delete.php?id={$row["id"]}'><button class='bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded'>Delete</button></a>" . "</td>";
-                    echo "</tr>";
-                }
-                ?>
-            </tbody>
-        </table>
-        <a href="createuser.php">
-            <button class="font-semibold p-2 bg-gray-400 text-white rounded-md mt-2 hover:bg-black">
-                Add new user
-            </button>
-        </a>
-    </div>
-
-
